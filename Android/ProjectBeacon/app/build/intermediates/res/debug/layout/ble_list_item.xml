@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/states_selector_list" >
+
+    <!-- Change names of all view elements with _ to be consistent with naming scheme elsewhere -->
+
+    <LinearLayout
+        android:id="@+id/rlRssi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" >
+
+        <TextView
+            android:id="@+id/tvRssi"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlBeaconDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/rlRssi" >
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_primary_color"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvUUIDString"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:text="@string/uuid_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvUUID"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_toRightOf="@id/tvUUIDString"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvMajorIdString"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvUUIDString"
+            android:gravity="center"
+            android:text="@string/major_id_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvMajorId"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvUUID"
+            android:layout_toRightOf="@id/tvMajorIdString"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvMinorIdString"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvMajorIdString"
+            android:text="@string/minor_id_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/tvMinorId"
+            style="@style/Theme.Beacon.DefaultTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvMajorId"
+            android:layout_toRightOf="@id/tvMinorIdString"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+</RelativeLayout><!-- From: file:/Users/rkhandelwal/development/workspace/ProjectBeacon/app/src/main/res/layout/ble_list_item.xml -->

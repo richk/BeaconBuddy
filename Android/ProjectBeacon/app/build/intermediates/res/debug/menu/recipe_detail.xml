@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/miSave"
+        android:icon="@drawable/ic_save"
+        android:menuCategory="system"
+        android:orderInCategory="2"        
+        android:onClick="onSaveAction"
+        android:showAsAction="ifRoom"
+        android:title="Save">
+    </item>
+    
+    <item
+        android:id="@+id/miDelete"
+        android:menuCategory="system"
+        android:orderInCategory="1"        
+        android:icon="@drawable/ic_delete"
+        android:onClick="onDeleteAction"
+        android:showAsAction="ifRoom"
+        android:title="Delete">
+    </item>
+
+</menu><!-- From: file:/Users/rkhandelwal/development/workspace/ProjectBeacon/app/src/main/res/menu/recipe_detail.xml -->

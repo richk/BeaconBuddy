@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/classes-d2ffea04816eaf2660f13fa1c40b412f137e1c2a.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/libs/crittercism_v4_5_4_sdkonly.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="59f2e0c08abb92f767714a5cc054d94957e91c85">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/crittercism_v4_5_4_sdkonly-8b292cbb3f4150ace42eace8f8d4430d80abcec1.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-d0350d5b9bf3b98b47a4bce70f3334977f5b2005.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/libs/huelocalsdk.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5ac01ff62c7188c2f1a400d5032ab129ceffa833">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/huelocalsdk-07262a508f5a799d46931220e1e6a370b6133251.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-3a58864aa42efb05b847f616e4b2131fcfb0a084.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/libs/Parse-1.5.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3d645417e7780d44f32e29a3ec6b729b75aef26c">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/Parse-1.5.1-8a192b211c8ec76332bf05f329b53505e7d35558.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/classes-6f17798a919baa99d58b94f6fe0bfc33d843889f.jar" />
+    </item>
+    <item
+        jar="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/libs/sdkresources.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="50028ba020161448a2668c4467fa9b4b36c8e155">
+        <dex dex="/Users/rkhandelwal/development/workspace/ProjectBeacon/app/build/intermediates/pre-dexed/debug/sdkresources-cee645b19b1475f2f285e4e053fdc4c3a5b3112f.jar" />
+    </item>
+
+</items>
