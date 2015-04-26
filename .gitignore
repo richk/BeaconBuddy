@@ -33,3 +33,6 @@ build/
 #executables
 gradlew
 gradlew.bat
+
+#token file
+token

@@ -1,15 +1,16 @@
 package com.codepath.beacon.events;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.amplitude.api.Amplitude;
-import com.codepath.beacon.contracts.ParseUserContracts;
-import com.parse.ParseUser;
+import com.codepath.beacon.BuildConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AmplitudeEventTracker implements EventTracker {
+    private static final String TAG = AmplitudeEventTracker.class.getSimpleName();
     private static AmplitudeEventTracker mEventTracker;
     private static final String AMPLITUDE_DEVICE_ID_KEY = "device_id";
     private static final String AMPLITUDE_DEVICE_KEY = "2f82511dce18aac5ca45d87b921fd3de";
@@ -37,11 +38,19 @@ public class AmplitudeEventTracker implements EventTracker {
 
     @Override
     public void track(String eventName) {
+        if (isDebugBuild()) {
+            Log.i(TAG, "Debug build. Not logging event");
+            return;
+        }
         Amplitude.getInstance().logEvent(eventName);
     }
 
     @Override
     public void track(String name, EventProperty properties[]) {
+        if (isDebugBuild()) {
+            Log.i(TAG, "Debug build. Not logging event");
+            return;
+        }
         if (properties == null || properties.length == 0) {
             track(name);
             return;
@@ -77,11 +86,23 @@ public class AmplitudeEventTracker implements EventTracker {
 
     @Override
     public void startSession() {
+        if (isDebugBuild()) {
+            Log.i(TAG, "Debug build. Not logging event");
+            return;
+        }
         Amplitude.getInstance().startSession();
     }
 
     @Override
     public void endSession() {
+        if (isDebugBuild()) {
+            Log.i(TAG, "Debug build. Not logging event");
+            return;
+        }
         Amplitude.getInstance().endSession();
+    }
+
+    private boolean isDebugBuild() {
+        return BuildConfig.DEBUG;
     }
 }

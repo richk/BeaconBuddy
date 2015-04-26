@@ -45,9 +45,7 @@ public class BeaconApplication extends Application {
     BleDeviceInfo.isInitialized = true;
     TriggerAction.isInitialized = true;
     beaconApplication = this;
-      AmplitudeEventTracker.initialize(this);
-      AmplitudeEventTracker.getInstance().startSession();
-
+    AmplitudeEventTracker.initialize(this);
   }
   
   public boolean addNewRecipe(Recipe recipe) {
@@ -89,6 +87,5 @@ public class BeaconApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        AmplitudeEventTracker.getInstance().endSession();
     }
 }
