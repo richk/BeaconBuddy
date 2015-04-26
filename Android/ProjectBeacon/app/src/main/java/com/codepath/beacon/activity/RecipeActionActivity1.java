@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.codepath.beacon.R;
@@ -23,6 +24,10 @@ import com.codepath.beacon.adapter.PackageItem;
 import com.codepath.beacon.contracts.IntentTransferContracts;
 import com.codepath.beacon.contracts.RecipeContracts;
 import com.codepath.beacon.contracts.RecipeContracts.TRIGGERS;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventProperty;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.SelectedAppsFragment;
 import com.codepath.beacon.models.TriggerAction;
 import com.codepath.beacon.models.TriggerAction.NOTIFICATION_TYPE;
@@ -48,10 +53,13 @@ public class RecipeActionActivity1 extends Activity {
   private TextView tvSilentDesc;
   private TextView tvLightDesc;
   private TextView tvAppsDesc;
+    private RadioGroup rgTrigger;
   
   private SelectedAppsFragment mAppList = new SelectedAppsFragment();
   
   private Context mContext;
+
+    private EventTracker mEventTracker;
 
   NOTIFICATION_TYPE mNotificationType;
 
@@ -60,6 +68,7 @@ public class RecipeActionActivity1 extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe_action1);
     mContext = this;
+      mEventTracker = AmplitudeEventTracker.getInstance();
     getActionBar().setDisplayHomeAsUpEnabled(true);
     etMessage = (EditText) findViewById(R.id.et_message);
     etPhn = (EditText) findViewById(R.id.et_phone);
@@ -79,7 +88,9 @@ public class RecipeActionActivity1 extends Activity {
     tvSilentDesc = (TextView) findViewById(R.id.tvSilentDesc);
     tvLightDesc = (TextView) findViewById(R.id.tvLightDesc);
     tvAppsDesc = (TextView) findViewById(R.id.tvAppsDesc);
-    
+
+      rgTrigger = (RadioGroup) findViewById(R.id.rg_triggers);
+
     if(savedInstanceState != null){
       int noti = savedInstanceState.getInt("notification_type");
       if(noti != 0){
@@ -242,8 +253,21 @@ public class RecipeActionActivity1 extends Activity {
 
     populateTriggerAndAction();
   }
-    
-  @Override
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEventTracker.startSession();
+        mEventTracker.track(EventName.RecipeAction.RENDER);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mEventTracker.endSession();
+    }
+
+    @Override
   protected void onSaveInstanceState(Bundle outState) {
     outState.putInt("notification_type", mNotificationType.ordinal());
     outState.putBoolean("leaving", rbLeaving.isChecked());
@@ -267,6 +291,10 @@ public class RecipeActionActivity1 extends Activity {
 		  Log.d(LOG_TAG, "Populating with notification type:" + mNotificationType);
 		  switch(mNotificationType) {
 		  case SMS :
+              mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                      new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                              EventName.RecipeAction.ActionType.ACTION_SMS)
+              });
 			  ivSms.setBackgroundResource(R.drawable.image_border);
 			  etMessage.setVisibility(View.VISIBLE);
 			  etPhn.setVisibility(View.VISIBLE);
@@ -278,6 +306,10 @@ public class RecipeActionActivity1 extends Activity {
 			  tvLightDesc.setVisibility(View.INVISIBLE);
 			  break;
 		  case NOTIFICATION:
+              mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                      new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                              EventName.RecipeAction.ActionType.ACTION_NOTIFICATION)
+              });
 			  ivNotification.setBackgroundResource(R.drawable.image_border);
 			  etMessage.setVisibility(View.VISIBLE);
 			  tvMessage.setVisibility(View.VISIBLE);
@@ -287,6 +319,10 @@ public class RecipeActionActivity1 extends Activity {
 			  tvLightDesc.setVisibility(View.INVISIBLE);
 			  break;
 		  case RINGER_SILENT :
+              mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                      new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                              EventName.RecipeAction.ActionType.ACTION_SILENT_MODE)
+              });
 			  ivSilent.setBackgroundResource(R.drawable.image_border);
 			  tvNotificationDesc.setVisibility(View.INVISIBLE);
 			  tvSmsDesc.setVisibility(View.INVISIBLE);
@@ -294,6 +330,10 @@ public class RecipeActionActivity1 extends Activity {
 			  tvLightDesc.setVisibility(View.INVISIBLE);
 			  break;
 		  case LIGHT :
+              mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                      new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                              EventName.RecipeAction.ActionType.ACTION_PHILIPS_HUE)
+              });
 			  ivLight.setBackgroundResource(R.drawable.image_border);
 			  tvNotificationDesc.setVisibility(View.INVISIBLE);
 			  tvSmsDesc.setVisibility(View.INVISIBLE);
@@ -301,6 +341,10 @@ public class RecipeActionActivity1 extends Activity {
 			  tvLightDesc.setVisibility(View.VISIBLE);
 			  break;
 		  case LAUNCH_APPS :
+              mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                      new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                              EventName.RecipeAction.ActionType.ACTION_LAUNCH_APP)
+              });
 			  ivApps.setBackgroundResource(R.drawable.image_border);
 			  if (notification.getMessage() != null) {
 				  populateSelectedAppView(notification.getMessage());
@@ -320,6 +364,10 @@ public class RecipeActionActivity1 extends Activity {
 		  }
 	  } 	
 	  else {
+          mEventTracker.track(EventName.RecipeAction.SELECT_ACTION, new EventProperty[]{
+                  new EventProperty(EventName.RecipeAction.ACTION_TYPE_PROPERTY,
+                          EventName.RecipeAction.ActionType.ACTION_NOTIFICATION)
+          });
 		  ivNotification.setBackgroundResource(R.drawable.image_border);
 		  etMessage.setVisibility(View.VISIBLE);
 		  tvMessage.setVisibility(View.VISIBLE);
@@ -356,10 +404,19 @@ public class RecipeActionActivity1 extends Activity {
     String trigger;
     if (rbLeaving.isChecked()) {
       trigger = TRIGGERS.LEAVING.name();
+        mEventTracker.track(EventName.RecipeAction.SELECT_TRIGGER, new EventProperty[]{
+                new EventProperty(EventName.RecipeAction.TRIGGER_TYPE_PROPERTY,
+                        EventName.RecipeAction.TriggerType.TRIGGER_LEAVING)
+        });
     } else {
-      trigger = TRIGGERS.APPROACHING.name();
+        mEventTracker.track(EventName.RecipeAction.SELECT_TRIGGER, new EventProperty[]{
+                new EventProperty(EventName.RecipeAction.TRIGGER_TYPE_PROPERTY,
+                        EventName.RecipeAction.TriggerType.TRIGGER_APPROACHING)
+        });
+        trigger = TRIGGERS.APPROACHING.name();
     }
-    String message = etMessage.getText().toString();
+      mEventTracker.track(EventName.RecipeAction.CLICK_SAVE);
+      String message = etMessage.getText().toString();
     if (mNotificationType == NOTIFICATION_TYPE.LAUNCH_APPS) {
     	message = mAppList.getSelectedApp().getPackageName();
     }

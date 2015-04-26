@@ -24,6 +24,9 @@ import com.codepath.beacon.BeaconApplication;
 import com.codepath.beacon.R;
 import com.codepath.beacon.contracts.RecipeContracts;
 import com.codepath.beacon.contracts.RecipeContracts.TRIGGERS;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.RecipeAlertDialog;
 import com.codepath.beacon.models.Recipe;
 import com.codepath.beacon.models.TriggerAction;
@@ -66,6 +69,8 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
   ImageView ibPlus1;
   ImageView ibPlus2;
   TextView tvTriggerandNotification;
+
+  private EventTracker mEventTracker;
   
   private static final int BEACON_SELECTION=0;
   private static final int ACTION_SELECTION=1;
@@ -75,6 +80,7 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe_detail);
+    mEventTracker = AmplitudeEventTracker.getInstance();
     tvActivationDate = (TextView) findViewById(R.id.tvActivationDate);
     tvSelectedBeacon = (TextView) findViewById(R.id.tvSelectedBeacon);
     tvSelectedAction = (TextView) findViewById(R.id.tvSelectedAction);
@@ -136,7 +142,19 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
     return true;
   }
 
-  @Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEventTracker.startSession();
+        mEventTracker.track(EventName.NewRecipe.RENDER);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
   protected void onSaveInstanceState(Bundle outState) {
 	  // TODO Auto-generated method stub
 	  super.onSaveInstanceState(outState);
@@ -330,6 +348,7 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
   public void onScanBeacon(View view) {
 	  Intent scanIntent = new Intent(this, BlePagerActivity.class);
 	  startActivityForResult(scanIntent, 0);
+      mEventTracker.track(EventName.NewRecipe.CLICK_SELECT_BEACON);
 //	  overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
   }
 
@@ -374,6 +393,7 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
 	  Log.d(LOG_TAG, "Checking if recipe already exists");
 	  Log.d(LOG_TAG, "Recipe exists:" + BeaconApplication.getApplication().recipeExists(recipe));
 	  Log.d(LOG_TAG, "Recipe being edited:" + recipe.isBeingEdited());
+      mEventTracker.track(EventName.NewRecipe.CLICK_DONE);
     if (BeaconApplication.getApplication().recipeExists(recipe)
         && recipe.isBeingEdited()) {
     	Log.d(LOG_TAG, "Recipe already exists");
@@ -423,6 +443,7 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
   }
 
   public void onSetAction(View view) {
+      mEventTracker.track(EventName.NewRecipe.CLICK_SELECT_ACTION);
     Intent scanIntent = new Intent(this, RecipeActionActivity1.class);
     scanIntent.putExtra(RecipeContracts.TRIGGERACTION,
         recipe.getTriggerAction());
@@ -432,6 +453,7 @@ public class RecipeDetailActivity extends Activity implements BeaconListener, An
 
   public void onDeleteAction(MenuItem mi) {
 	  Log.d(LOG_TAG, "Deleting recipe with object id:" + recipe.getObjectId());
+      mEventTracker.track(EventName.NewRecipe.CLICK_DELETE);
     if(createFlag){
       finish();
       return;

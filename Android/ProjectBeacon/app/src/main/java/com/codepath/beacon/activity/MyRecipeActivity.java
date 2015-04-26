@@ -19,6 +19,9 @@ import com.codepath.beacon.OnProgressListener;
 import com.codepath.beacon.R;
 import com.codepath.beacon.SettingsActivity;
 import com.codepath.beacon.contracts.RecipeContracts;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.EmptyListFragment;
 import com.codepath.beacon.fragments.RecipeAlertDialog;
 import com.codepath.beacon.fragments.RecipeListFragment;
@@ -40,6 +43,7 @@ public class MyRecipeActivity extends Activity implements BeaconListener,OnProgr
 	BeaconManager mBeaconManager;
 	ImageView pbRecipesLoading;
 	Animator pbAnimator;
+    EventTracker mEventTracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MyRecipeActivity extends Activity implements BeaconListener,OnProgr
 	        return;
 		}
 		loadRecipes();
+        mEventTracker = AmplitudeEventTracker.getInstance();
 	}
 
 	public void loadRecipes() {
@@ -76,6 +81,8 @@ public class MyRecipeActivity extends Activity implements BeaconListener,OnProgr
 	@Override
 	protected void onResume() {
 		super.onResume();
+        mEventTracker.startSession();
+        mEventTracker.track(EventName.RECIPE_PAGE_RENDER);
 		mNewFragment.addListener(this);
 		mBeaconManager.startListening();
 		mNewFragment.setBeaconManager(mBeaconManager);
@@ -83,6 +90,7 @@ public class MyRecipeActivity extends Activity implements BeaconListener,OnProgr
 
 	@Override
 	protected void onPause() {
+        mEventTracker.endSession();
 		mNewFragment.removeBeaconManager();
 		mNewFragment.removeListener(this);
 		mBeaconManager.stopListenening();
@@ -96,17 +104,15 @@ public class MyRecipeActivity extends Activity implements BeaconListener,OnProgr
 	}
 
 	public void onAddAction(MenuItem mi) {
+        mEventTracker.track(EventName.RECIPE_PAGE_NEW_RECIPE_CLICK);
 		Intent createRecipeIntent = new Intent(this, RecipeDetailActivity.class);
 		createRecipeIntent.putExtra(RecipeContracts.RECIPE_ACTION, RecipeContracts.RECIPE_ACTION_CREATE);
 		createRecipeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivityForResult(createRecipeIntent, CREATE_REQUEST_CODE);
-		//	      Intent bubbleIntent = new Intent(this, NotificationBubble.class); 
-		//	        bubbleIntent.putExtra("message", "yo yo yo yo");
-		//	        startService(bubbleIntent);
-
 	}
 
 	public void onRefresh(MenuItem mi) {
+        mEventTracker.track(EventName.RECIPE_PAGE_REFRESH_CLICK);
 		loadRecipes();	
 	}
 

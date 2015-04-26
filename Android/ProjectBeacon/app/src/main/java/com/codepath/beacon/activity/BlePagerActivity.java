@@ -28,13 +28,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.beacon.OnProgressListener;
 import com.codepath.beacon.R;
 import com.codepath.beacon.contracts.BleDeviceInfoContracts;
 import com.codepath.beacon.contracts.ParseUserContracts;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventProperty;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.DeviceListFragment;
 import com.codepath.beacon.fragments.MyDeviceListFragment;
 import com.codepath.beacon.fragments.MyDeviceListFragment.OnMyDeviceListFragmentInteractionListener;
@@ -76,6 +79,8 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	private Animator pbAnimator;
 	
 	private MyPagerAdapter mAdapterViewPager;
+
+    private EventTracker mEventTracker;
 	
 	public BlePagerActivity() {
 		super();
@@ -86,6 +91,8 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ble_pager);
+
+        mEventTracker = AmplitudeEventTracker.getInstance();
 		
 		pbDevicesLoading = (ImageView) findViewById(R.id.pbAllDevicesLoading);
 		pbAnimator = AnimatorInflater.loadAnimator(this, R.anim.ble_progress_bar);
@@ -113,6 +120,9 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	        	switch(position) {
 	        	case 0:
 	        		Log.d(LOG_TAG, "My Devices tab selected");
+                    mEventTracker.track(EventName.BeaconList.RENDER, new EventProperty[]{
+                            new EventProperty(EventName.BeaconList.PAGE_TYPE_PROPERTY,
+                                    EventName.BeaconList.PageType.MY_BEACONS)});
 	        		if(mRefreshItem != null){
 	        			mRefreshItem.setVisible(true);
 	        		}
@@ -124,6 +134,9 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	        		break;
 	        	case 1:
 	        		Log.d(LOG_TAG, "New Devices tab selected");
+                    mEventTracker.track(EventName.BeaconList.RENDER, new EventProperty[]{
+                            new EventProperty(EventName.BeaconList.PAGE_TYPE_PROPERTY,
+                                    EventName.BeaconList.PageType.NEW_BEACONS)});
 	        		if (mNewDevices != null && mNewDevices.isEmpty()) {
 	        			onProgressStart();
 	        		}
@@ -180,7 +193,19 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
         });
 	}
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEventTracker.startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mEventTracker.endSession();
+    }
+
+    @Override
 	protected void onStop() {
 		mBeaconManager.stopListenening();
 		super.onStop();
@@ -208,6 +233,7 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 		int id = item.getItemId();
 		if (id == R.id.action_refresh) {
 			if(getActionBar().getSelectedTab().getPosition()==0){
+                mEventTracker.track(EventName.BeaconList.CLICK_REFRESH);
 				mRefreshItem.setEnabled(false);
 				loadMyDevices();
 				return true;
@@ -270,6 +296,10 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	public void onDeviceListFragmentInteraction(BleDeviceInfo deviceInfo) {
 		// Show dialog fragment to the user to set a name to the bledevice and save it
 		Log.d(LOG_TAG, "Adding a new beacon");
+        mEventTracker.track(EventName.BeaconList.CLICK_BEACON, new EventProperty[]{
+                new EventProperty(EventName.BeaconList.PAGE_TYPE_PROPERTY,
+                        EventName.BeaconList.PageType.NEW_BEACONS),
+        });
 		FragmentManager manager = getFragmentManager();
 		AddBeaconFragment fragment = AddBeaconFragment.newInstance("Add Beacon", deviceInfo, true);
 		fragment.show(manager, "add_beacon");
@@ -390,6 +420,10 @@ OnMyDeviceListFragmentInteractionListener, BeaconListener, OnProgressListener {
 	@Override
 	public void onMyDeviceListFragmentInteraction(BleDeviceInfo deviceInfo) {
 		Log.d(LOG_TAG, "Updating an existing beacon:" + deviceInfo.getName());
+        mEventTracker.track(EventName.BeaconList.CLICK_BEACON, new EventProperty[]{
+                new EventProperty(EventName.BeaconList.PAGE_TYPE_PROPERTY,
+                        EventName.BeaconList.PageType.MY_BEACONS)
+        });
 		FragmentManager manager = getFragmentManager();
 		AddBeaconFragment fragment = AddBeaconFragment.newInstance("Update Beacon", deviceInfo, false);
 		fragment.show(manager, "update_beacon");

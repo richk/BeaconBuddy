@@ -13,7 +13,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.codepath.beacon.R;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.RecipeAlertDialog;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -24,6 +28,7 @@ public class SignUpActivity extends Activity {
 	
 	private EditText etUserName;
 	private EditText etPwd;
+    private EventTracker mEventTracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,23 @@ public class SignUpActivity extends Activity {
 			etUserName.setText(uname);
 			etPwd.setText(pwd);
 		}
-
+        mEventTracker = AmplitudeEventTracker.getInstance();
 	}
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEventTracker.startSession();
+        mEventTracker.track(EventName.SIGNUP_PAGE_RENDER);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mEventTracker.endSession();
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -78,6 +96,7 @@ public class SignUpActivity extends Activity {
 	
 	public void onSignup(View view) {
 		Toast.makeText(this, "Signing in", Toast.LENGTH_SHORT).show();
+        mEventTracker.track(EventName.SIGNUP_PAGE_SIGNUP_CLICKED);
 		String username = etUserName.getText().toString();
 		String pwd = etPwd.getText().toString();
 		ParseUser user = new ParseUser();

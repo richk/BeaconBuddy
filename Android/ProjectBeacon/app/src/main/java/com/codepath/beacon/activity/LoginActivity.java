@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codepath.beacon.R;
+import com.codepath.beacon.events.AmplitudeEventTracker;
+import com.codepath.beacon.events.EventName;
+import com.codepath.beacon.events.EventTracker;
 import com.codepath.beacon.fragments.RecipeAlertDialog;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -19,6 +22,7 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends Activity {
 	private static final String LOG_TAG = LoginActivity.class.getSimpleName();
+    private EventTracker mEventTracker;
 	
 	private EditText etUserName;
 	private EditText etPwd;
@@ -39,6 +43,7 @@ public class LoginActivity extends Activity {
 		if (currentUser != null) {
 		  handleSuccessfulLogin();
 		}
+        mEventTracker = AmplitudeEventTracker.getInstance();
 	}
 
 	@Override
@@ -56,6 +61,7 @@ public class LoginActivity extends Activity {
 	public void onLogin(View view) {
 //		Intent i = new Intent(this, SignUpActivity.class);
 //		startActivity(i);
+        mEventTracker.track(EventName.LOGIN_PAGE_LOGIN_CLICKED);
 		if (!isNetworkAvailable()) {
 			showNoNetwork();
 			return;
@@ -73,8 +79,21 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
-	
-	@Override
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEventTracker.startSession();
+        mEventTracker.track(EventName.LOGIN_PAGE_RENDER);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mEventTracker.endSession();
+    }
+
+    @Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		String uname = etUserName.getText().toString();

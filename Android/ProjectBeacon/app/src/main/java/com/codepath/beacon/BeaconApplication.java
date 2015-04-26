@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.codepath.beacon.events.AmplitudeEventTracker;
 import com.codepath.beacon.models.Recipe;
 import com.codepath.beacon.models.TriggerAction;
 import com.codepath.beacon.scan.BleDeviceInfo;
@@ -44,6 +45,8 @@ public class BeaconApplication extends Application {
     BleDeviceInfo.isInitialized = true;
     TriggerAction.isInitialized = true;
     beaconApplication = this;
+      AmplitudeEventTracker.initialize(this);
+      AmplitudeEventTracker.getInstance().startSession();
 
   }
   
@@ -82,4 +85,10 @@ public class BeaconApplication extends Application {
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        AmplitudeEventTracker.getInstance().endSession();
+    }
 }

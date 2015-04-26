@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/largest_orange_ring"/>
-    <item android:drawable="@drawable/medium_orange_ring"/>
-    <item android:drawable="@drawable/smallest_orange_ring"/>
-</layer-list>
-<!-- From: file:/Users/rkhandelwal/development/workspace/ProjectBeacon/app/src/main/res/drawable/orange_ring_layers.xml -->
