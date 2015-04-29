@@ -177,10 +177,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
   public void launchApp(String appPackageName) {
 	  Log.d(LOG_TAG, "Launching App:" + appPackageName);
-	  Intent launchAppIntent = new Intent(context, AppCanvas.class); 
-	  launchAppIntent.putExtra("appName", appPackageName);
-	  launchAppIntent.putExtra("triggerType", NOTIFICATION_TYPE.LAUNCH_APPS.name());
-	  context.startService(launchAppIntent);  
+      Intent launchAppIntent = context.getPackageManager().getLaunchIntentForPackage(appPackageName);
+      if (launchAppIntent != null) {
+          context.startActivity(launchAppIntent);
+      }
   }
 
 }

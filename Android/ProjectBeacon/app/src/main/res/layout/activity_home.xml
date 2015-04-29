@@ -19,7 +19,7 @@
         android:textSize="30sp"/>
         
     <TextView
-        android:id="@+id/tvNewUser"
+        android:id="@+id/tvNewUserSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -37,7 +37,7 @@
         android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tvNewUser"
+        android:layout_alignBaseline="@+id/tvNewUserSignIn"
         android:layout_alignBottom="@+id/tvNewUser"
         android:layout_alignParentRight="true"
         android:layout_marginRight="22dp"
